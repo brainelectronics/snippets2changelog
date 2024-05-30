@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "snippets2changelog"
-version = "0.0.0+will-be-updated-automatically"
+version = "0.0.0" # will-be-updated-automatically
 description =  "Generate a changelog from individual snippets"
 authors = ["brainelectronics <info@brainelectronics.de>"]
 repository = "https://github.com/brainelectronics/snippets2changelog"
@@ -10,7 +10,7 @@ packages = [
   { include = "snippets2changelog/**/*.py" }
 ]
 include = [
-  { path = 'snippets2changelog/templates/snippet.md.template', format = 'sdist' }
+  { path = "snippets2changelog/templates/snippet.md.template", format = ["sdist", "wheel"] }
 ]
 exclude = ["snippets2changelog/out"]
 classifiers = [
@@ -33,7 +33,7 @@ enable = true
 format-jinja-imports = [
   { module = "subprocess", item = "check_output" },
 ]
-format-jinja = """{{ check_output(["python", "-c", "from pathlib import Path; exec(Path('snippets2changelog/version.py').read_text()); print(__version__)"]).decode().strip() }}"""
+format-jinja = """{{ check_output(["python3", "-c", "from pathlib import Path; exec(Path('snippets2changelog/version.py').read_text()); print(__version__)"]).decode().strip() }}"""
 # format-jinja = "{{ env.get('PROJECT_VERSION') }}"
 
 [tool.poetry.scripts]
@@ -43,9 +43,11 @@ changelog-generator = 'snippets2changelog.cli:main'
 python = "^3.11"
 pyyaml = "~6.0"
 GitPython = "~3.1.43"
+jinja2 = "^3.1.4"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
+changelog2version = "^0.10"
 flake8 = "*"
 isort = "*"
 mypy = "*"

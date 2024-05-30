@@ -67,6 +67,25 @@ files = [
 ]
 
 [[package]]
+name = "changelog2version"
+version = "0.10.0"
+description = "Update version info file with latest changelog version entry"
+optional = false
+python-versions = ">=3.7, <4"
+files = [
+    {file = "changelog2version-0.10.0-py3-none-any.whl", hash = "sha256:b6388815415a1bae6101458bef46754420f1ae4b4666ddf53a55fd8d1307823e"},
+    {file = "changelog2version-0.10.0.tar.gz", hash = "sha256:1652564cead72d5d71aaf8866e6a39faa57d7e8ea6c6684537da253c07afe54e"},
+]
+
+[package.dependencies]
+jinja2 = ">=3.1.0,<4"
+semver = ">=2.13.0,<3"
+
+[package.extras]
+dev = ["tox (>=3.25.1,<4)"]
+test = ["coverage (>=6.4.2,<7)", "flake8 (>=5.0.0,<6)", "nose2 (>=0.12.0,<1)"]
+
+[[package]]
 name = "click"
 version = "8.1.7"
 description = "Composable command line interface toolkit"
@@ -701,6 +720,17 @@ files = [
 ]
 
 [[package]]
+name = "semver"
+version = "2.13.0"
+description = "Python helper for Semantic Versioning (http://semver.org/)"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "semver-2.13.0-py2.py3-none-any.whl", hash = "sha256:ced8b23dceb22134307c1b8abfa523da14198793d9787ac838e70e29e77458d4"},
+    {file = "semver-2.13.0.tar.gz", hash = "sha256:fa0fe2722ee1c3f57eac478820c3a5ae2f624af8264cbdf9000c980ff7f75e3f"},
+]
+
+[[package]]
 name = "smmap"
 version = "5.0.1"
 description = "A pure Python implementation of a sliding window memory map manager"
@@ -816,4 +846,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2cadc7bcfd8038aaf81db54cbb13c9a0acba326f20ec49afd7e474a1051754b1"
+content-hash = "040e37cb7494fdb355d979dee00732d62562c55573c89ac11c6977b2348e0092"
