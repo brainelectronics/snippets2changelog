@@ -13,7 +13,7 @@ omit =
     version.py
 
 [report]
-include = src/*
+include = snippets2changelog/*
 # Regexes for lines to exclude from consideration
 
 ignore_errors = True
