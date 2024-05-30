@@ -21,6 +21,8 @@ Create version info files based on the latest changelog entry.
 - [Usage](#usage)
   - [Info](#info)
   - [Create](#create)
+    - [Snippet](#snippet)
+    - [Changelog](#changelog)
   - [Parse](#parse)
 - [Contributing](#contributing)
   - [Setup](#setup)
@@ -46,6 +48,7 @@ changelog-generator info
 ```
 
 ### Create
+#### Snippet
 
 Create a new snippet with the given name at the specified snippets folder
 
@@ -72,6 +75,15 @@ affected: testers, users
 
 TBD
 
+```
+
+#### Changelog
+
+Create or update a changelog with all snippets.
+New changelog will be named `<OLD_CHANGELOG_NAME.new>`
+
+```bash
+changelog-generator changelog changelog.md --snippets=.snippets
 ```
 
 ### Parse
