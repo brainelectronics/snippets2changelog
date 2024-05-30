@@ -40,7 +40,7 @@ jobs:
           echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
           cat latest_description.txt >> $GITHUB_OUTPUT
           echo '"EOT"' >> $GITHUB_OUTPUT
-          latest_version=$(poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
+          latest_version=$(poetry run changelog2version --changelog_file changelog.md.new --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
           echo "latest_version=$latest_version" >> $GITHUB_ENV
       - name: Build package
         run: |
