@@ -10,7 +10,7 @@ packages = [
   { include = "snippets2changelog/**/*.py" }
 ]
 include = [
-  { path = 'snippets2changelog/templates/snippet.md.template', format = 'sdist' }
+  { path = "snippets2changelog/templates/snippet.md.template", format = ["sdist", "wheel"] }
 ]
 exclude = ["snippets2changelog/out"]
 classifiers = [
@@ -43,6 +43,7 @@ changelog-generator = 'snippets2changelog.cli:main'
 python = "^3.11"
 pyyaml = "~6.0"
 GitPython = "~3.1.43"
+jinja2 = "^3.1.4"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
