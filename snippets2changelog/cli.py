@@ -12,7 +12,7 @@ from sys import stdout
 from typing import Sequence
 
 from .common import LOG_LEVELS, collect_user_choice
-from .creator import SnippetCreator
+from .creator import ChangelogCreator, SnippetCreator
 from .parser import SnippetParser
 
 LOGGER_FORMAT = '[%(asctime)s] [%(levelname)-8s] [%(filename)-15s @'\
@@ -49,6 +49,22 @@ def parse_args(argv: Sequence[str] | None = None) -> Args:
         help="Prints information about snippets2changelog",
     )
     parser_info.set_defaults(func=fn_info)
+
+    parser_changelog = subparsers.add_parser(
+        "changelog",
+        help="Create a changelog",
+    )
+    parser_changelog.set_defaults(func=fn_changelog)
+    parser_changelog.add_argument(
+        "changelog",
+        type=Path,
+        help="Path to existing changelog",
+    )
+    parser_changelog.add_argument(
+        "--snippets",
+        type=lambda x: does_exist(parser, x),
+        help="Directory to crawl for snippets",
+    )
 
     parser_create = subparsers.add_parser(
         "create",
@@ -97,6 +113,11 @@ def fn_info(_args: Args) -> None:
     print(f"Version: {extract_version()}")
 
 
+def fn_changelog(args: Args) -> None:
+    cc = ChangelogCreator(changelog=args.changelog, snippets_folder=args.snippets, verbosity=args.verbose)
+    cc.update_changelog()
+
+
 def fn_create(args: Args) -> None:
     content = {
         "short_description": input("Short description: "),
@@ -107,15 +128,16 @@ def fn_create(args: Args) -> None:
         "affected": input("Affected users (default all): ") or "all",
         "content": "TBD",
     }
-    sc = SnippetCreator(file_name=args.name, content=content)
-    logger.debug(f"rendered content: >>>>>>\n{sc.render()}\n<<<<<<")
-    sc.create()
+    sc = SnippetCreator()
+    sc.render(content=content)
+    logger.debug(f"rendered content: >>>>>>\n{sc.rendered_content}\n<<<<<<")
+    sc.create(file_name=args.name)
 
 
 def fn_parse(args: Args) -> None:
-    sp = SnippetParser(file_name=args.name, verbosity=args.verbose)
-    sp.parse()
-    print(json.dumps(sp.content, indent=args.indent))
+    sp = SnippetParser(verbosity=args.verbose)
+    sp.parse(file_name=args.name)
+    print(json.dumps(sp.parsed_content, indent=args.indent))
 
 
 def main() -> int:

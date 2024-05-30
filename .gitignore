@@ -1,3 +1,6 @@
+# snippets2changelog specific
+changelog.md.new
+
 # custom, package specific ignores
 .DS_Store
 .DS_Store?
@@ -114,7 +117,7 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
+.venv*
 env/
 venv/
 ENV/
