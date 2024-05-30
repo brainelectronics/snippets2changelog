@@ -1,0 +1,8 @@
+## {{ short_description }}
+<!--
+type: {{ type }}
+scope: {{ scope }}
+affected: {{ affected }}
+-->
+
+{{ content }}

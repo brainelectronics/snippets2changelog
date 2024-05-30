@@ -1,0 +1,117 @@
+[tool.poetry]
+name = "snippets2changelog"
+version = "0.0.0+will-be-updated-automatically"
+description =  "Generate a changelog from individual snippets"
+authors = ["brainelectronics <info@brainelectronics.de>"]
+repository = "https://github.com/brainelectronics/snippets2changelog"
+readme = "README.md"
+license = "MIT"
+packages = [
+  { include = "snippets2changelog/**/*.py" }
+]
+include = [
+  { path = 'snippets2changelog/templates/snippet.md.template', format = 'sdist' }
+]
+exclude = ["snippets2changelog/out"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: Software Development :: Version Control",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3 :: Only"
+]
+
+# https://github.com/mtkennerly/poetry-dynamic-versioning/tree/v1.3.0
+[tool.poetry-dynamic-versioning]
+enable = true
+format-jinja-imports = [
+  { module = "subprocess", item = "check_output" },
+]
+format-jinja = """{{ check_output(["python", "-c", "from pathlib import Path; exec(Path('snippets2changelog/version.py').read_text()); print(__version__)"]).decode().strip() }}"""
+# format-jinja = "{{ env.get('PROJECT_VERSION') }}"
+
+[tool.poetry.scripts]
+changelog-generator = 'snippets2changelog.cli:main'
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyyaml = "~6.0"
+GitPython = "~3.1.43"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+flake8 = "*"
+isort = "*"
+mypy = "*"
+poetry-dynamic-versioning = "^1.3.0"
+pre-commit = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+# twine = "*" # requires nh3 to be compiled with rust 1.70 or higher
+types-pyyaml = "*"
+types-requests = "*"
+yamllint = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+fast = true
+exclude = '''
+(
+  /(                        # exclude a few common directories in the
+    \.git                   # root of the project
+    | \.pytest_cache
+    | untracked
+    | \.venv
+    | \.container_home_dir
+    | dist
+  ))
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.11"
+strict="True"
+disallow_untyped_defs = "True"
+disallow_any_unimported = "True"
+no_implicit_optional = "True"
+check_untyped_defs = "True"
+warn_return_any = "True"
+warn_unused_ignores = "True"
+show_error_codes = "True"
+exclude = []
+mypy_path="typeshed"
+
+[tool.pylint]
+#ignore = [".venv", "untracked"]
+
+# Files or directories matching the regular expression patterns are skipped. The
+# regex matches against base names, not paths. The default value ignores Emacs
+# file locks
+#ignore-patterns = ["^\\.#"]
+
+# Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
+# number of processors available to use, and will cap the count on Windows to
+# avoid hangs.
+jobs = 0
+
+# see above: not available for Python <3.9
+#[tool.pylint.MASTER]
+#load-plugins=["pylint_per_file_ignores"]
+
+#[tool.pylint-per-file-ignores]
+#"pocketrockit/examples/" = "invalid-name"
