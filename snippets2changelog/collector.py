@@ -38,8 +38,12 @@ class HistoryWalker(object):
         return Path(self._repo.working_dir)
 
     @property
-    def branch_name(self) -> Head:
-        return self._repo.active_branch
+    def branch_name(self) -> str:
+        try:
+            return str(self._repo.active_branch)
+        except Exception as e:
+            print(f"HEAD is detached: {e}")
+            return str(self._repo.head.commit.hexsha)
 
     @property
     def tags(self) -> list[TagReference]:
