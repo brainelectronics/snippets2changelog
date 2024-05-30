@@ -24,6 +24,7 @@ Create version info files based on the latest changelog entry.
   - [Parse](#parse)
 - [Contributing](#contributing)
   - [Setup](#setup)
+  - [Testing](#testing)
 - [Credits](#credits)
 
 <!-- /MarkdownTOC -->
@@ -103,13 +104,32 @@ changelog-generator parse example_snippets/123.md \
 
 For active development you need to have `poetry` and `pre-commit` installed
 
-```sh
+```bash
 python3 -m pip install --upgrade --user poetry pre-commit
 git clone https://github.com/brainelectronics/snippets2changelog.git
 cd snippets2changelog
 pre-commit install
 poetry install
 ```
+
+### Testing
+
+```bash
+# run all tests
+poetry run coverage run -m pytest -v
+
+# run only one specific tests
+poetry run coverage run -m pytest -v -k "test_read_save_json"
+```
+
+Generate the coverage files with
+
+```bash
+python create_report_dirs.py
+coverage html
+```
+
+The coverage report is placed at `reports/coverage/html/index.html`
 
 ## Credits
 
