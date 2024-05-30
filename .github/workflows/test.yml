@@ -45,8 +45,11 @@ jobs:
           poetry self add "poetry-dynamic-versioning[plugin]"
       - name: Build package
         run: |
+          poetry run changelog-generator \
+            changelog changelog.md \
+            --snippets=.snippets
           poetry run changelog2version \
-            --changelog_file changelog.md \
+            --changelog_file changelog.md.new \
             --version_file snippets2changelog/version.py \
             --version_file_type py \
             --debug

@@ -1,0 +1,4 @@
+## [{{ version }}] - {{ timestamp }}
+{{- content }}
+[{{ version }}]: {{ version_reference }}
+
