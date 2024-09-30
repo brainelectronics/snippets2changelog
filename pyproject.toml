@@ -10,7 +10,9 @@ packages = [
   { include = "snippets2changelog/**/*.py" }
 ]
 include = [
-  { path = "snippets2changelog/templates/snippet.md.template", format = ["sdist", "wheel"] }
+  { path = "snippets2changelog/templates/snippet.md.template", format = ["sdist", "wheel"] },
+  { path = "snippets2changelog/templates/changelog_part.md.template", format = ["sdist", "wheel"] },
+  { path = "snippets2changelog/templates/changelog.md.template", format = ["sdist", "wheel"] }
 ]
 exclude = ["snippets2changelog/out"]
 classifiers = [
