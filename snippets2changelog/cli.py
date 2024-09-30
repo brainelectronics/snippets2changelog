@@ -65,6 +65,11 @@ def parse_args(argv: Sequence[str] | None = None) -> Args:
         type=lambda x: does_exist(parser, x),
         help="Directory to crawl for snippets",
     )
+    parser_changelog.add_argument(
+        "--in-place",
+        action='store_true',
+        help="Update specified changelog in place",
+    )
 
     parser_create = subparsers.add_parser(
         "create",
@@ -114,7 +119,7 @@ def fn_info(_args: Args) -> None:
 
 
 def fn_changelog(args: Args) -> None:
-    cc = ChangelogCreator(changelog=args.changelog, snippets_folder=args.snippets, verbosity=args.verbose)
+    cc = ChangelogCreator(changelog=args.changelog, snippets_folder=args.snippets, update_in_place=args.in_place, verbosity=args.verbose)
     cc.update_changelog()
 
 
