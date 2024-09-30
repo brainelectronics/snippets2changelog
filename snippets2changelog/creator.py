@@ -64,9 +64,10 @@ class SnippetCreator(object):
 class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCollector):  # type: ignore
     """docstring for ChangelogCreator"""
 
-    def __init__(self, changelog: Path,  snippets_folder: Path, verbosity: int = 0) -> None:
+    def __init__(self, changelog: Path,  snippets_folder: Path, update_in_place: bool, verbosity: int = 0) -> None:
         if changelog.exists():
             self._changelog = changelog
+            self._update_in_place = update_in_place
         else:
             raise ChangelogCreatorError(f"Given changelog '{changelog}' does not exist")
 
@@ -118,5 +119,7 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
             new_changelog_content = changelog_entry + new_changelog_content
 
         rendered_changelog = self._env.get_template("changelog.md.template").render({"prolog": existing_changelog_content[0], "new": new_changelog_content, "existing": self._version_line + existing_changelog_content[1]})
-        rendered_changelog_path = Path(f"{self._changelog}.new")
+        rendered_changelog_path = Path(f"{self._changelog}")
+        if not self._update_in_place:
+            rendered_changelog_path = Path(str(rendered_changelog_path) + ".new")
         save_file(content=rendered_changelog, path=rendered_changelog_path)

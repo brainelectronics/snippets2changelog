@@ -80,10 +80,16 @@ TBD
 #### Changelog
 
 Create or update a changelog with all snippets.
-New changelog will be named `<OLD_CHANGELOG_NAME.new>`
+
+The generated changelog will be named `<OLD_CHANGELOG_NAME.new>` unless the
+`--in-place` flag is used. This flag is intended for CI usage with a clean
+checkout before a run.
+
+*Be aware to restore the changelog before another run as it might generate
+version entries and version bumps multiple times otherwise.*
 
 ```bash
-changelog-generator changelog changelog.md --snippets=.snippets
+changelog-generator changelog changelog.md --snippets=.snippets [--in-place]
 ```
 
 ### Parse
