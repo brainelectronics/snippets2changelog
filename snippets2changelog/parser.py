@@ -5,6 +5,7 @@
 import logging
 import re
 from pathlib import Path
+from typing import Union
 
 from .common import LOG_LEVELS, read_file
 
