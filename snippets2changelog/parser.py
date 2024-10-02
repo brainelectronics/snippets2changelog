@@ -5,7 +5,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import Union
+from typing import Dict, Tuple, Union
 
 from .common import LOG_LEVELS, read_file
 
@@ -21,7 +21,7 @@ class SnippetParserError(Exception):
 class SnippetParser(object):
     """docstring for SnippetCreator"""
 
-    def __init__(self, additional_keys: Union[tuple[str], tuple[()]] = (), verbosity: int = 0) -> None:
+    def __init__(self, additional_keys: Union[Tuple[str], Tuple[()]] = (), verbosity: int = 0) -> None:
         self._file_name = Path()
         self._required_parser_keys = ("type", "scope", "affected") + additional_keys
         self._parsed_content = dict(zip(self._required_parser_keys, [""] * len(self._required_parser_keys)))
@@ -29,7 +29,7 @@ class SnippetParser(object):
         self._logger.setLevel(level=LOG_LEVELS[min(verbosity, max(LOG_LEVELS.keys()))])
 
     @property
-    def parsed_content(self) -> dict[str, str]:
+    def parsed_content(self) -> Dict[str, str]:
         return self._parsed_content
 
     def parse(self, file_name: Path) -> None:
