@@ -20,7 +20,7 @@ class SnippetParserError(Exception):
 class SnippetParser(object):
     """docstring for SnippetCreator"""
 
-    def __init__(self, additional_keys: tuple[str] | tuple[()] = (), verbosity: int = 0) -> None:
+    def __init__(self, additional_keys: Union[tuple[str], tuple[()]] = (), verbosity: int = 0) -> None:
         self._file_name = Path()
         self._required_parser_keys = ("type", "scope", "affected") + additional_keys
         self._parsed_content = dict(zip(self._required_parser_keys, [""] * len(self._required_parser_keys)))
