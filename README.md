@@ -24,9 +24,15 @@ Create version info files based on the latest changelog entry.
     - [Snippet](#snippet)
     - [Changelog](#changelog)
   - [Parse](#parse)
+  - [CI](#ci)
+    - [GitHub](#github)
+      - [Actions](#actions)
+      - [Custom workflow](#custom-workflow)
+    - [Other](#other)
 - [Contributing](#contributing)
   - [Setup](#setup)
   - [Testing](#testing)
+  - [Changelog](#changelog-1)
 - [Credits](#credits)
 
 <!-- /MarkdownTOC -->
@@ -116,6 +122,60 @@ changelog-generator parse example_snippets/123.md \
 }
 ```
 
+### CI
+
+To use this tool in a CI environment use the following commands, job configs or
+actions.
+
+#### GitHub
+##### Actions
+See [changelog-from-snippets](https://github.com/brainelectronics/changelog-from-snippets) action.
+
+##### Custom workflow
+
+```yaml
+---
+name: Generate changelog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # all history is needed to crawl it properly
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: |
+          pip install snippets2changelog
+      - name: Update changelog with snippets
+        run: |
+          changelog-generator \
+            changelog changelog.md \
+            --snippets=.snippets \
+            --in-place
+```
+
+#### Other
+
+```bash
+pip install snippets2changelog
+changelog-generator \
+  changelog changelog.md \
+  --snippets=.snippets \
+  --in-place
+```
+
 ## Contributing
 
 ### Setup
@@ -149,11 +209,36 @@ coverage html
 
 The coverage report is placed at `reports/coverage/html/index.html`
 
+### Changelog
+
+The changelog format is based on [Keep a Changelog][ref-keep-a-changelog], and
+this project adheres to [Semantic Versioning][ref-semantic-versioning].
+
+Please add a changelog snippet, see above, for every PR you contribute. The
+changes are categorised into:
+
+- `bugfixes` fix an issue which can be used out of the box without any further
+changes required by the user. Be aware that in some cases bugfixes can be
+breaking changes.
+- `features` is used to indicate a backwards compatible change providing
+improved or extended functionalitiy. This does, as `bugfixes`, in any case
+not require any changes by the user to keep the system running after upgrading.
+- `breaking` creates a breaking, non backwards compatible change which
+requires the user to perform additional tasks, adopt his currently running
+code or in general can't be used as is anymore.
+
+The changelog entry shall be short but meaningful and can of course contain
+links and references to other issues or PRs. New lines are only allowed for a
+new bulletpoint entry. Usage examples or other code snippets should be placed
+in the code documentation, README or the docs folder.
+
 ## Credits
 
 A big thank you to the creators and maintainers of [SemVer.org][ref-semver]
 for their documentation and [regex example][ref-semver-regex-example]
 
 <!-- Links -->
+[ref-keep-a-changelog]: https://keepachangelog.com/en/1.0.0/
+[ref-semantic-versioning]: https://semver.org/spec/v2.0.0.html
 [ref-semver]: https://semver.org/
 [ref-semver-regex-example]: https://regex101.com/r/Ly7O1x/3/
