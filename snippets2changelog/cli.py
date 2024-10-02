@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 from argparse import Namespace as Args
 from pathlib import Path
 from sys import stdout
-from typing import Sequence
+from typing import Sequence, Union
 
 from .common import LOG_LEVELS, collect_user_choice
 from .creator import ChangelogCreator, SnippetCreator
@@ -32,7 +32,7 @@ def does_exist(parser: ArgumentParser, arg: str) -> Path:
         return Path(arg)
 
 
-def parse_args(argv: Sequence[str] | None = None) -> Args:
+def parse_args(argv: Union[Sequence[str], None] = None) -> Args:
     """Multi command argument parser"""
     parser = ArgumentParser(__doc__)
     parser.add_argument(

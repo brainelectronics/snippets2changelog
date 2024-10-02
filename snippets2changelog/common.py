@@ -4,7 +4,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Union
 
 import yaml
 
@@ -17,7 +17,7 @@ LOG_LEVELS = {
 }
 
 
-def collect_user_choice(question: str, options: list[str]) -> str:
+def collect_user_choice(question: str, options: List[str]) -> str:
     while True:
         print(f"Choose from: {options}")
         choice = input(question if question.endswith(": ") else question + ": ")
@@ -27,7 +27,7 @@ def collect_user_choice(question: str, options: list[str]) -> str:
             print(f"Invalid input: '{choice}', choose from: {options}")
 
 
-def read_file(path: Path, parse: str = "read", mode: str = "r") -> dict[Any, Any] | str | list[str] | Any:
+def read_file(path: Path, parse: str = "read", mode: str = "r") -> Union[Dict[Any, Any], str, List[str], Any]:
     with open(path, mode) as file:
         if parse == "read":
             return file.read()
@@ -46,7 +46,7 @@ def read_file(path: Path, parse: str = "read", mode: str = "r") -> dict[Any, Any
             )
 
 
-def save_file(content: str | dict[Any, Any], path: Path, mode: str = "w", render: str = "txt") -> None:
+def save_file(content: Union[str, Dict[Any, Any]], path: Path, mode: str = "w", render: str = "txt") -> None:
     """
     Save a file to the specified path with the given content.
 

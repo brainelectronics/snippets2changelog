@@ -3,7 +3,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Union
 
 import pytest
 from pytest import MonkeyPatch
@@ -43,7 +43,7 @@ def test_something_that_involves_user_input(monkeypatch: MonkeyPatch) -> None:
         ("raise", "Something"),
     ]
 )
-def test_read_save_json(name: str, data: dict[str, Any] | str, tmp_path: Path) -> None:
+def test_read_save_json(name: str, data: Union[Dict[str, Any], str], tmp_path: Path) -> None:
     p = tmp_path / f"data.{name}"
 
     if name == "raise":

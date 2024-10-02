@@ -4,6 +4,7 @@
 
 from collections.abc import Iterator
 from pathlib import Path
+from typing import List, Tuple
 
 from git import Commit, GitCmdObjectDB, Repo, Submodule, TagReference
 from git.refs.head import Head
@@ -46,7 +47,7 @@ class HistoryWalker(object):
             return str(self._repo.head.commit.hexsha)
 
     @property
-    def tags(self) -> list[TagReference]:
+    def tags(self) -> List[TagReference]:
         return sorted(self._repo.tags, key=lambda t: t.commit.committed_datetime)
 
     def commits(self) -> Iterator[Commit]:
@@ -88,7 +89,7 @@ class SnippetCollector(HistoryWalker):
             if file.is_file() and (file.suffix == ".{}".format(self._file_extension)):
                 yield file
 
-    def snippets(self) -> Iterator[tuple[Commit, Path]]:
+    def snippets(self) -> Iterator[Tuple[Commit, Path]]:
         collected_snippets = list(self.all_snippet_files())
 
         # nice chaos :)

@@ -4,7 +4,7 @@
 
 import logging
 from pathlib import Path
-from typing import Iterator
+from typing import Dict, Iterator
 
 from changelog2version.extract_version import ExtractVersion  # type: ignore
 from git import Commit
@@ -49,7 +49,7 @@ class SnippetCreator(object):
     def rendered_content(self) -> str:
         return self._rendered_content
 
-    def render(self, content: dict[str, str]) -> None:
+    def render(self, content: Dict[str, str]) -> None:
         if all(k in content for k in self._required_render_keys):
             self._rendered_content = self._env.get_template(str(self._snippet_template)).render(content)
         else:
