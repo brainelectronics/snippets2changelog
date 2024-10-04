@@ -55,7 +55,7 @@ jobs:
       - name: Check JSON content
         # if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
         run: |
-          echo "Yet that's true, latest meta type is: ${{ fromJson(env.CHANGELOG_JSON).meta.type }}"
+          echo "Yet that's true, latest meta type is: ${{ fromJson(env.CHANGELOG_JSON).meta }}"
       - name: Build package
         run: |
           poetry run changelog2version \
