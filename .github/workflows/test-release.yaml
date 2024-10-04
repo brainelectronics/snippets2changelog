@@ -53,7 +53,7 @@ jobs:
             --debug
           echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
       - name: Check JSON content
-        if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == "bugfix" }}
+        if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
         run: |
           echo "Yet that's true, latest meta type is: ${{ fromJson(env.CHANGELOG_JSON).meta.type }}"
       - name: Build package
@@ -68,29 +68,29 @@ jobs:
       - name: Test built package
         run: |
           twine check dist/*.tar.gz
-      - name: Archive build package artifact
-        uses: actions/upload-artifact@v4
-        with:
-          # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
-          # ${{ github.repository }} and ${{ github.ref_name }} can't be used for artifact name due to unallowed '/'
-          name: dist_py.${{ github.event.repository.name }}_sha.${{ github.sha }}_build.${{ github.run_number }}
-          path: dist/*.tar.gz
-          retention-days: 14
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1.5
-        with:
-          repository_url: https://test.pypi.org/legacy/
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          skip_existing: true
-          verbose: true
-          print_hash: true
-      - name: Create Prerelease
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
-          release_name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
-          body: ${{ steps.parse_changelog.outputs.LATEST_DESCRIPTION }}
-          draft: false
-          prerelease: true
+      # - name: Archive build package artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+      #     # ${{ github.repository }} and ${{ github.ref_name }} can't be used for artifact name due to unallowed '/'
+      #     name: dist_py.${{ github.event.repository.name }}_sha.${{ github.sha }}_build.${{ github.run_number }}
+      #     path: dist/*.tar.gz
+      #     retention-days: 14
+      # - name: Publish package
+      #   uses: pypa/gh-action-pypi-publish@release/v1.5
+      #   with:
+      #     repository_url: https://test.pypi.org/legacy/
+      #     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      #     skip_existing: true
+      #     verbose: true
+      #     print_hash: true
+      # - name: Create Prerelease
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
+      #     release_name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
+      #     body: ${{ steps.parse_changelog.outputs.LATEST_DESCRIPTION }}
+      #     draft: false
+      #     prerelease: true
