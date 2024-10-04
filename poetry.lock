@@ -73,13 +73,13 @@ files = [
 
 [[package]]
 name = "changelog2version"
-version = "0.10.1"
+version = "0.12.0"
 description = "Update version info file with latest changelog version entry"
 optional = false
 python-versions = "<4,>=3.7"
 files = [
-    {file = "changelog2version-0.10.1-py3-none-any.whl", hash = "sha256:40846cfea429f2a915d339d7e710a0c644cd889a0031479db227e74e8a282327"},
-    {file = "changelog2version-0.10.1.tar.gz", hash = "sha256:c7acf8c305f9cc4b8ec196bff9fa8bed0b0f4bbe01957c31f5691f3cc04fab28"},
+    {file = "changelog2version-0.12.0-py3-none-any.whl", hash = "sha256:9f8cdde18c1177382e378de2ae18b9b394b3f10959e34224fd596eb1569395af"},
+    {file = "changelog2version-0.12.0.tar.gz", hash = "sha256:74327ad8b2a466617014e28e38d6c153d97740f63e265a04f55f4a453ab4af2a"},
 ]
 
 [package.dependencies]
@@ -907,4 +907,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "32e40adadcb431f4d98f52cd348fe3f46c083fb0ccc3db5c6fdf248c4d7f8a2a"
+content-hash = "7289fbc72148283992a6586006513938153c78eb5d106d93555b08bf35f7e492"
