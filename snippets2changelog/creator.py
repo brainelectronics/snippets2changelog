@@ -109,6 +109,11 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
             changelog_entry_content = {
                 "version": self.semver_data,
                 "timestamp": commit.committed_datetime.isoformat(),
+                "meta": {
+                    "type": snippet_content["type"],
+                    "scope": snippet_content["scope"],
+                    "affected": snippet_content["affected"],
+                },
                 "content": snippet_content["details"],
                 "version_reference": f"https://github.com/brainelectronics/snippets2changelog/tree/{self.semver_data}",
             }

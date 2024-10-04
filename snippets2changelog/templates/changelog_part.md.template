@@ -1,4 +1,7 @@
 ## [{{ version }}] - {{ timestamp }}
+{%- if meta %}
+<!-- meta = {{ meta }} -->
+{%- endif %}
 {{- content }}
 [{{ version }}]: {{ version_reference }}
 
