@@ -53,7 +53,7 @@ jobs:
             --debug
           echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
       - name: Check JSON content
-        if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
+        # if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
         run: |
           echo "Yet that's true, latest meta type is: ${{ fromJson(env.CHANGELOG_JSON).meta.type }}"
       - name: Build package
