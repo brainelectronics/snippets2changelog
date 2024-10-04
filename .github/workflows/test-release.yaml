@@ -43,6 +43,19 @@ jobs:
           echo '"EOT"' >> $GITHUB_OUTPUT
           latest_version=$(poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
           echo "latest_version=$latest_version" >> $GITHUB_ENV
+      - name: Parse changelog JSON
+        id: parse_changelog_json
+        run: |
+          poetry run changelog2version \
+            --changelog_file changelog.md \
+            --output changelog.json \
+            --pretty \
+            --debug
+          echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
+      - name: Check JSON content
+        if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == "bugfix" }}
+        run: |
+          echo "Yet that's true, latest meta type is: ${{ fromJson(env.CHANGELOG_JSON).meta.type }}"
       - name: Build package
         run: |
           poetry run changelog2version \
