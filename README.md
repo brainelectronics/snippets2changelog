@@ -2,7 +2,7 @@
 
 [![Downloads](https://pepy.tech/badge/snippets2changelog)](https://pepy.tech/project/snippets2changelog)
 ![Release](https://img.shields.io/github/v/release/brainelectronics/snippets2changelog?include_prereleases&color=success)
-![Python](https://img.shields.io/badge/python3-Ok-green.svg)
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-green.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/github/brainelectronics/snippets2changelog/branch/main/graph/badge.svg)](https://app.codecov.io/github/brainelectronics/snippets2changelog)
 
