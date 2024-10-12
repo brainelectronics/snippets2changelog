@@ -36,7 +36,8 @@ jobs:
           poetry run changelog-generator \
             changelog changelog.md \
             --snippets=.snippets \
-            --in-place
+            --in-place \
+            --no-internal
       - name: Parse changelog
         id: parse_changelog
         run: |
@@ -51,6 +52,7 @@ jobs:
           echo '"EOT"' >> $GITHUB_OUTPUT
           echo "latest_version=$(jq -r '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
+        if: ! ${{ contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         run: |
           poetry run changelog2version \
             --changelog_file changelog.md \
@@ -59,6 +61,7 @@ jobs:
             --debug
           poetry build
       - name: Publish package
+        if: ! ${{ contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         uses: pypa/gh-action-pypi-publish@release/v1.5
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
@@ -66,6 +69,7 @@ jobs:
           verbose: true
           print_hash: true
       - name: Create Release
+        if: ! ${{ contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
