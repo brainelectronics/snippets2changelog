@@ -98,6 +98,11 @@ version entries and version bumps multiple times otherwise.*
 changelog-generator changelog changelog.md --snippets=.snippets [--in-place]
 ```
 
+The option `--no-internal` ignores all snippets with scope `internal` during
+the changelog generation. This is useful if those changes are not affecting
+the "product" like internal documentation changes or similar things, which e.g.
+do not require a deployment.
+
 ### Parse
 
 Parse an existing snippet file and return the data as JSON without indentation
@@ -163,7 +168,8 @@ jobs:
           changelog-generator \
             changelog changelog.md \
             --snippets=.snippets \
-            --in-place
+            --in-place \
+            --no-internal
 ```
 
 #### Other
@@ -173,7 +179,8 @@ pip install snippets2changelog
 changelog-generator \
   changelog changelog.md \
   --snippets=.snippets \
-  --in-place
+  --in-place \
+  --no-internal
 ```
 
 ## Contributing
@@ -226,6 +233,12 @@ not require any changes by the user to keep the system running after upgrading.
 - `breaking` creates a breaking, non backwards compatible change which
 requires the user to perform additional tasks, adopt his currently running
 code or in general can't be used as is anymore.
+
+The scope of a change shall either be:
+- `internal` if no new deployment is required for this change, like updates in
+the documentation for example
+- `external` or `all` if this change affects the public API of this package or
+requires a new tag and deployment for any other reason
 
 The changelog entry shall be short but meaningful and can of course contain
 links and references to other issues or PRs. New lines are only allowed for a
