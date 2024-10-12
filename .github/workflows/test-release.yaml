@@ -67,7 +67,7 @@ jobs:
       - name: Check JSON content 2
         run: |
             echo "Read output: ${{ steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT }}"
-            echo "meta type fromJson: START${{ fromJSON(steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT)info.meta.type }}END"
+            echo "meta type fromJson: START${{ fromJSON(steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT).info.meta.type }}END"
       - name: Build package
         run: |
           poetry run changelog2version \
