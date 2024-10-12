@@ -2,6 +2,7 @@
 
 """Snippets generator"""
 
+import json
 import logging
 from pathlib import Path
 from typing import Dict, Iterator
@@ -89,10 +90,12 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
 
         self._skip_internal = skip_internal
 
-    def update_changelog(self) -> None:
+    def update_changelog(self, dry_run: bool = False) -> None:
         new_changelog_content = ""
         # create a "prolog" and an "epilog", with the new content in between
         existing_changelog_content = read_file(path=self._changelog, parse="read").split(self._version_line)
+
+        latest_changelog_entry = {}
 
         for commit, file_name in self.snippets():
             self._logger.debug(f"Parsing {file_name}")
@@ -123,11 +126,17 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
                 "content": snippet_content["details"],
                 "version_reference": f"https://github.com/brainelectronics/snippets2changelog/tree/{self.semver_data}",
             }
+            latest_changelog_entry = changelog_entry_content
             self._logger.debug(f"changelog_entry_content: {changelog_entry_content}")
 
             changelog_entry = self._env.get_template("changelog_part.md.template").render(changelog_entry_content)
             self._logger.debug(f"rendered changelog_entry: \n{changelog_entry}")
             new_changelog_content = changelog_entry + new_changelog_content
+
+        if dry_run:
+            latest_changelog_entry['version'] = str(latest_changelog_entry['version'])
+            print(json.dumps(latest_changelog_entry))
+            return
 
         rendered_changelog = self._env.get_template("changelog.md.template").render({"prolog": existing_changelog_content[0], "new": new_changelog_content, "existing": self._version_line + existing_changelog_content[1]})
         rendered_changelog_path = Path(f"{self._changelog}")

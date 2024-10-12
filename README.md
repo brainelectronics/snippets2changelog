@@ -98,6 +98,27 @@ version entries and version bumps multiple times otherwise.*
 changelog-generator changelog changelog.md --snippets=.snippets [--in-place]
 ```
 
+To just get the latest changelog entry without updating or generating the
+changelog, use `--dry-run` to print the latest snippet content in JSON format.
+
+```json
+{
+    "version": "1.5.0",
+    "timestamp": "2024-10-12T13:36:46+02:00",
+    "meta": {
+        "type": "feature",
+        "scope": [
+            "all"
+        ],
+        "affected": [
+            "all"
+        ]
+    },
+    "content": "\n\nUse `--dry-run` with the `changelog` subparser to print the latest changelog entry as JSON instead of updating the changelog file.\n",
+    "version_reference": "https://github.com/brainelectronics/snippets2changelog/tree/1.5.0"
+}
+```
+
 ### Parse
 
 Parse an existing snippet file and return the data as JSON without indentation
