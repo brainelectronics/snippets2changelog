@@ -37,12 +37,16 @@ jobs:
       - name: Parse changelog
         id: parse_changelog
         run: |
-          poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['description'])" > latest_description.txt
+          poetry run changelog2version \
+            --changelog_file changelog.md \
+            --output changelog.json \
+            --print \
+            --debug
+          echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
           echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
-          cat latest_description.txt >> $GITHUB_OUTPUT
+          jq ".info.description" changelog.json >> $GITHUB_OUTPUT
           echo '"EOT"' >> $GITHUB_OUTPUT
-          latest_version=$(poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
-          echo "latest_version=$latest_version" >> $GITHUB_ENV
+          echo "latest_version=$(jq '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
         run: |
           poetry run changelog2version \
