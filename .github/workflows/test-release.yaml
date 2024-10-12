@@ -55,8 +55,6 @@ jobs:
         # if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
         run: |
           echo "CHANGELOG_JSON: $CHANGELOG_JSON"
-          echo "env.CHANGELOG_JSON: ${{ env.CHANGELOG_JSON }}"
-          echo "env meta fromJson ${{ fromJson(env.CHANGELOG_JSON).meta }}"
       - name: Parse changelog JSON
         id: parse_changelog_json_2
         run: |
