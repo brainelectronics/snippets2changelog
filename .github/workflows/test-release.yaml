@@ -33,17 +33,23 @@ jobs:
           poetry run changelog-generator \
             changelog changelog.md \
             --snippets=.snippets \
-            --in-place
+            --in-place \
+            --no-internal
       - name: Parse changelog
         id: parse_changelog
         run: |
-          poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['description'])" > latest_description.txt
+          poetry run changelog2version \
+            --changelog_file changelog.md \
+            --output changelog.json \
+            --print \
+            --debug
+          echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
           echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
-          cat latest_description.txt >> $GITHUB_OUTPUT
+          jq -r ".info.description" changelog.json >> $GITHUB_OUTPUT
           echo '"EOT"' >> $GITHUB_OUTPUT
-          latest_version=$(poetry run changelog2version --changelog_file changelog.md --print | python -c "import sys, json; print(json.load(sys.stdin)['info']['version'])")
-          echo "latest_version=$latest_version" >> $GITHUB_ENV
+          echo "latest_version=$(jq -r '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         run: |
           poetry run changelog2version \
             --changelog_file changelog.md \
@@ -53,9 +59,11 @@ jobs:
             --debug
           poetry build
       - name: Test built package
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         run: |
           twine check dist/*.tar.gz
       - name: Archive build package artifact
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         uses: actions/upload-artifact@v4
         with:
           # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
@@ -64,6 +72,7 @@ jobs:
           path: dist/*.tar.gz
           retention-days: 14
       - name: Publish package
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         uses: pypa/gh-action-pypi-publish@release/v1.5
         with:
           repository_url: https://test.pypi.org/legacy/
@@ -72,6 +81,7 @@ jobs:
           verbose: true
           print_hash: true
       - name: Create Prerelease
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
