@@ -44,9 +44,9 @@ jobs:
             --debug
           echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
           echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
-          jq ".info.description" changelog.json >> $GITHUB_OUTPUT
+          jq -r ".info.description" changelog.json >> $GITHUB_OUTPUT
           echo '"EOT"' >> $GITHUB_OUTPUT
-          echo "latest_version=$(jq '.info.version' changelog.json)" >> $GITHUB_ENV
+          echo "latest_version=$(jq -r '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
         run: |
           poetry run changelog2version \
