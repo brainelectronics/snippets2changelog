@@ -51,6 +51,7 @@ jobs:
             --output changelog.json \
             --pretty \
             --debug
+          echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
       - name: Check JSON content
         # if: ${{ fromJson(env.CHANGELOG_JSON).meta.type == 'bugfix' }}
         run: |
@@ -63,7 +64,7 @@ jobs:
             --print
       - name: Check JSON content 2
         run: |
-            echo "stdout meta type fromJson ${{ fromJSON(steps.parse_changelog_json_2.stdout).meta.type }}"
+            echo "stdout meta type fromJson ${{ fromJSON(steps.parse_changelog_json_2.outputs.stdout).meta.type }}"
       - name: Build package
         run: |
           poetry run changelog2version \
