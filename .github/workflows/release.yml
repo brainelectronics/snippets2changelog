@@ -40,6 +40,7 @@ jobs:
             --dry-run > latest-entry.json
           echo "CHANGELOG_JSON=$(jq -c . < latest-entry.json)" >> $GITHUB_ENV
       - name: Update changelog with snippets
+        id: update_changelog
         run: |
           poetry run changelog-generator \
             changelog changelog.md \
@@ -83,6 +84,6 @@ jobs:
         with:
           tag_name: ${{ env.latest_version }}
           release_name: ${{ env.latest_version }}
-          body: ${{ steps.parse_changelog.outputs.LATEST_DESCRIPTION }}
+          body: ${{ steps.update_changelog.outputs.LATEST_DESCRIPTION }}
           draft: false
           prerelease: false
