@@ -57,12 +57,15 @@ jobs:
         run: |
           echo "CHANGELOG_JSON: $CHANGELOG_JSON"
           echo "meta fromJson: START${{ fromJson(env.CHANGELOG_JSON).meta }}END"
-      - name: Parse changelog JSON
+          echo "$CHANGELOG_JSON" | jq ".[].meta.type"
+      - name: Parse changelog JSON 2
         id: parse_changelog_json_2
         run: |
-          echo "CHANGELOG_JSON_STDOUT=$(poetry run changelog2version --changelog_file changelog.md --print)" >> $GITHUB_OUTPUT
+          value=$(poetry run changelog2version --changelog_file changelog.md --print)
+          echo "CHANGELOG_JSON_STDOUT=$value" >> $GITHUB_OUTPUT
       - name: Check JSON content 2
         run: |
+            echo "Read output: ${{ steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT }}"
             echo "meta type fromJson: START${{ fromJSON(steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT).meta.type }}END"
       - name: Build package
         run: |
