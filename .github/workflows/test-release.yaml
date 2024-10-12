@@ -53,21 +53,14 @@ jobs:
             --debug
           echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
       - name: Check JSON content
-        # if: ${{ fromJson(env.CHANGELOG_JSON).info.meta.type == 'bugfix' }}
+        if: ${{ fromJson(env.CHANGELOG_JSON).info.meta.type == 'bugfix' }}
         run: |
+          echo "this was a bugfix change"
           echo "CHANGELOG_JSON: $CHANGELOG_JSON"
           echo "info meta type fromJson: START${{ fromJson(env.CHANGELOG_JSON).info.meta.type }}END"
+          # works, prints "bugfix"
           echo "$CHANGELOG_JSON" | jq ".info.meta.type"
           # works, prints "bugfix"
-      - name: Parse changelog JSON 2
-        id: parse_changelog_json_2
-        run: |
-          value=$(poetry run changelog2version --changelog_file changelog.md --print)
-          echo "CHANGELOG_JSON_STDOUT=$value" >> $GITHUB_OUTPUT
-      - name: Check JSON content 2
-        run: |
-            echo "Read output: ${{ steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT }}"
-            echo "meta type fromJson: START${{ fromJSON(steps.parse_changelog_json_2.outputs.CHANGELOG_JSON_STDOUT).info.meta.type }}END"
       - name: Build package
         run: |
           poetry run changelog2version \
