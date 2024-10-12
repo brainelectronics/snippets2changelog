@@ -36,7 +36,6 @@ jobs:
             --snippets=.snippets \
             --dry-run > latest-entry.json
           jq -r ".content" latest-entry.json > latest_description.txt
-          sed -i '/^$/d' latest_description.txt
           cat latest-entry.json
           cat latest_description.txt
       - name: Update changelog with snippets
