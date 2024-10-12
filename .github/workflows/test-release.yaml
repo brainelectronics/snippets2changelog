@@ -36,6 +36,7 @@ jobs:
             --snippets=.snippets \
             --dry-run > latest-entry.json
           jq -r ".content" latest-entry.json > latest_description.txt
+          sed -i '/^$/d' latest_description.txt
           echo "CHANGELOG_JSON=$(jq -c . < latest-entry.json)" >> $GITHUB_ENV
           echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
           cat latest_description.txt >> $GITHUB_OUTPUT
