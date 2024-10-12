@@ -101,6 +101,10 @@ class SnippetCollector(HistoryWalker):
         # self._logger.debug(f"collected_snippets: {collected_snippets}, looking for {self.snippets_folder}")
         # collected_snippets: [PosixPath('.snippets/3.md')], looking for .snippets
 
+        # remember which snippets have already been visited to avoid processing
+        # it twice in case it has been touched or modified at a later point
+        processed_snippets = []
+
         # use reversed to have oldest commit as first element
         for idx, commit in reversed(list(enumerate(self.commits()))):
             for file in commit.stats.files.keys():
@@ -113,7 +117,8 @@ class SnippetCollector(HistoryWalker):
                     self._logger.warning(f"file {self.snippets_folder / file} is a match")
                     yield (commit, self.snippets_folder / file)
                 """
-                if Path(file) in collected_snippets:
+                if Path(file) in collected_snippets and Path(file) not in processed_snippets:
                     # self._logger.debug(f"file {file} is a match")
                     # file .snippets/3.md is a match
+                    processed_snippets.append(Path(file))
                     yield (commit, Path(file))
