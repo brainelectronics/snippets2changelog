@@ -64,7 +64,7 @@ class SnippetCreator(object):
 class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCollector):  # type: ignore
     """docstring for ChangelogCreator"""
 
-    def __init__(self, changelog: Path,  snippets_folder: Path, update_in_place: bool, verbosity: int = 0) -> None:
+    def __init__(self, changelog: Path,  snippets_folder: Path, update_in_place: bool, skip_internal: bool = False, verbosity: int = 0) -> None:
         if changelog.exists():
             self._changelog = changelog
             self._update_in_place = update_in_place
@@ -87,6 +87,8 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
         self._logger.debug(("semver_data:", self.semver_data))
         # VersionInfo(major=0, minor=1, patch=0, prerelease=None, build=None))
 
+        self._skip_internal = skip_internal
+
     def update_changelog(self) -> None:
         new_changelog_content = ""
         # create a "prolog" and an "epilog", with the new content in between
@@ -97,6 +99,10 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
             self.parse(file_name=file_name)
             snippet_content = self.parsed_content
             self._logger.debug(snippet_content)
+
+            if "internal" in snippet_content["scope"] and self._skip_internal:
+                continue
+
             if snippet_content["type"] == "bugfix":
                 self.semver_data = self.semver_data.bump_patch()
             elif snippet_content["type"] == "feature":

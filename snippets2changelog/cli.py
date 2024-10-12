@@ -70,6 +70,11 @@ def parse_args(argv: Union[Sequence[str], None] = None) -> Args:
         action='store_true',
         help="Update specified changelog in place",
     )
+    parser_changelog.add_argument(
+        "--no-internal",
+        action='store_true',
+        help="Skip snippets with scope set as 'internal'",
+    )
 
     parser_create = subparsers.add_parser(
         "create",
@@ -119,7 +124,7 @@ def fn_info(_args: Args) -> None:
 
 
 def fn_changelog(args: Args) -> None:
-    cc = ChangelogCreator(changelog=args.changelog, snippets_folder=args.snippets, update_in_place=args.in_place, verbosity=args.verbose)
+    cc = ChangelogCreator(changelog=args.changelog, snippets_folder=args.snippets, update_in_place=args.in_place, skip_internal=args.no_internal, verbosity=args.verbose)
     cc.update_changelog()
 
 
