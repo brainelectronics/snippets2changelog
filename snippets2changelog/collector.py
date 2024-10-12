@@ -43,7 +43,7 @@ class HistoryWalker(object):
         try:
             return str(self._repo.active_branch)
         except Exception as e:
-            # print(f"HEAD is detached: {e}")
+            # HEAD is detached
             return str(self._repo.head.commit.hexsha)
 
     @property

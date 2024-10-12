@@ -38,13 +38,7 @@ jobs:
             changelog changelog.md \
             --snippets=.snippets \
             --dry-run > latest-entry.json
-          jq -r ".content" latest-entry.json > latest_description.txt
-          sed -i '/^$/d' latest_description.txt
           echo "CHANGELOG_JSON=$(jq -c . < latest-entry.json)" >> $GITHUB_ENV
-          echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
-          cat latest_description.txt >> $GITHUB_OUTPUT
-          echo '"EOT"' >> $GITHUB_OUTPUT
-          echo "latest_version=$(jq -r '.version' latest-entry.json)" >> $GITHUB_ENV
       - name: Update changelog with snippets
         run: |
           poetry run changelog-generator \
@@ -52,6 +46,19 @@ jobs:
             --snippets=.snippets \
             --in-place \
             --no-internal
+
+          poetry run changelog2version \
+            --changelog_file changelog.md \
+            --output changelog.json \
+            --print \
+            --debug
+
+          jq -r ".info.description" changelog.json > latest_description.txt
+          sed -i '/^$/d' latest_description.txt
+          echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
+          cat latest_description.txt >> $GITHUB_OUTPUT
+          echo '"EOT"' >> $GITHUB_OUTPUT
+          echo "latest_version=$(jq -r '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
         run: |
           poetry run changelog2version \
