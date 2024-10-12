@@ -31,6 +31,18 @@ jobs:
           python -m pip install -U poetry twine
           poetry self add "poetry-dynamic-versioning[plugin]"
           poetry install
+      - name: Parse changelog
+        id: parse_changelog
+        run: |
+          poetry run changelog-generator \
+            changelog changelog.md \
+            --snippets=.snippets \
+            --dry-run > latest-entry.json
+          echo "CHANGELOG_JSON=$(jq -c . < latest-entry.json)" >> $GITHUB_ENV
+          echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
+          jq -r ".content" latest-entry.json >> $GITHUB_OUTPUT
+          echo '"EOT"' >> $GITHUB_OUTPUT
+          echo "latest_version=$(jq -r '.version' latest-entry.json)" >> $GITHUB_ENV
       - name: Update changelog with snippets
         run: |
           poetry run changelog-generator \
@@ -38,21 +50,7 @@ jobs:
             --snippets=.snippets \
             --in-place \
             --no-internal
-      - name: Parse changelog
-        id: parse_changelog
-        run: |
-          poetry run changelog2version \
-            --changelog_file changelog.md \
-            --output changelog.json \
-            --print \
-            --debug
-          echo "CHANGELOG_JSON=$(jq -c . < changelog.json)" >> $GITHUB_ENV
-          echo 'LATEST_DESCRIPTION<<"EOT"' >> $GITHUB_OUTPUT
-          jq -r ".info.description" changelog.json >> $GITHUB_OUTPUT
-          echo '"EOT"' >> $GITHUB_OUTPUT
-          echo "latest_version=$(jq -r '.info.version' changelog.json)" >> $GITHUB_ENV
       - name: Build package
-        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
         run: |
           poetry run changelog2version \
             --changelog_file changelog.md \
@@ -61,7 +59,7 @@ jobs:
             --debug
           poetry build
       - name: Publish package
-        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: pypa/gh-action-pypi-publish@release/v1.5
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
@@ -69,7 +67,7 @@ jobs:
           verbose: true
           print_hash: true
       - name: Create Release
-        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).info.meta.scope, 'internal') }}
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
