@@ -90,7 +90,7 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
 
         self._skip_internal = skip_internal
 
-    def update_changelog(self, dry_run: bool = False) -> None:
+    def update_changelog(self, dry_run: bool = False, version_reference: str = "https://github.com/brainelectronics/snippets2changelog/tree/") -> None:
         new_changelog_content = ""
         # create a "prolog" and an "epilog", with the new content in between
         existing_changelog_content = read_file(path=self._changelog, parse="read").split(self._version_line)
@@ -124,7 +124,7 @@ class ChangelogCreator(ExtractVersion, SnippetParser, SnippetCreator, SnippetCol
                     "affected": snippet_content["affected"],
                 },
                 "content": snippet_content["details"],
-                "version_reference": f"https://github.com/brainelectronics/snippets2changelog/tree/{self.semver_data}",
+                "version_reference": f"{version_reference}/{self.semver_data}",
             }
             latest_changelog_entry = changelog_entry_content
             self._logger.debug(f"changelog_entry_content: {changelog_entry_content}")
