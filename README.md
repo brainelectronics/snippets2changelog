@@ -124,6 +124,11 @@ the changelog generation. This is useful if those changes are not affecting
 the "product" like internal documentation changes or similar things, which e.g.
 do not require a deployment.
 
+The option `--version-reference` allows to configure the URL to the tags in the
+rendered changelog file. Use e.g.
+`https://github.com/<GITHUB_USER>/<PROJECT_USING_SNIPPETS2CHANGELOG>/tree/`
+for a project using this package.
+
 ### Parse
 
 Parse an existing snippet file and return the data as JSON without indentation
