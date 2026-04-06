@@ -28,7 +28,8 @@ jobs:
           python-version: '3.9'
       - name: Install build and deploy dependencies
         run: |
-          python -m pip install -U "poetry>=2.3.2,<3" "twine>=6.2.0,<7"
+          # Python 3.9 compability is dropped with Poetry 2.3.0
+          python -m pip install -U "poetry>2.2.0,<2.3.0" "twine>=6.2.0,<7"
           poetry install
       - name: Parse changelog
         id: parse_changelog
@@ -80,7 +81,7 @@ jobs:
           print_hash: true
       - name: Create Release
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
-        uses: softprops/action-gh-release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.latest_version }}
           name: ${{ env.latest_version }}
