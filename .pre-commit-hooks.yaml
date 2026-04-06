@@ -1,0 +1,9 @@
+---
+
+- id: snippets2changelog
+  name: snippets2changelog
+  description: Create version info files based on the latest changelog entry
+  entry: changelog-generator
+  language: python
+  pass_filenames: false
+  require_serial: true
