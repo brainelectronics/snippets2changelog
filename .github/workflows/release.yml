@@ -28,8 +28,8 @@ jobs:
           python-version: '3.9'
       - name: Install build and deploy dependencies
         run: |
-          python -m pip install -U poetry twine
-          poetry self add "poetry-dynamic-versioning[plugin]"
+          # Python 3.9 compability is dropped with Poetry 2.3.0
+          python -m pip install -U "poetry>2.2.0,<2.3.0" "twine>=6.2.0,<7"
           poetry install
       - name: Parse changelog
         id: parse_changelog
@@ -68,9 +68,12 @@ jobs:
             --version_file_type py \
             --debug
           poetry build
+      - name: Test built package
+        run: |
+          twine check dist/*.tar.gz
       - name: Publish package
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
-        uses: pypa/gh-action-pypi-publish@release/v1.5
+        uses: pypa/gh-action-pypi-publish@release/v1.13
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip_existing: true
@@ -78,12 +81,11 @@ jobs:
           print_hash: true
       - name: Create Release
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.latest_version }}
-          release_name: ${{ env.latest_version }}
+          name: ${{ env.latest_version }}
           body: ${{ steps.update_changelog.outputs.LATEST_DESCRIPTION }}
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -216,11 +216,13 @@ changelog-generator \
 For active development you need to have `poetry` and `pre-commit` installed
 
 ```bash
-python3 -m pip install --upgrade --user poetry pre-commit
+# Python 3.9 compability is dropped with Poetry 2.3.0
+python3 -m pip install --upgrade --user "poetry>2.2.0,<2.3.0" "pre-commit>=4.5.1,<5"
 git clone https://github.com/brainelectronics/snippets2changelog.git
 cd snippets2changelog
 pre-commit install
 poetry install
+# poetry update --lock
 ```
 
 ### Testing

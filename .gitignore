@@ -1,5 +1,7 @@
 # snippets2changelog specific
 changelog.md.new
+latest-entry.json
+latest_description.txt
 
 # changelog2version specific
 changelog.json
