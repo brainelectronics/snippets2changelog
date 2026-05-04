@@ -19,6 +19,48 @@ jobs:
         with:
           # all history is needed to crawl it properly
           fetch-depth: 0
+      - name: Count run number
+        id: count
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.setFailed("This workflow must be triggered by a pull request.");
+              return;
+            }
+
+            const pr_number = pr.number;
+            const workflow_name = context.workflow;
+            const branch_name = pr.head.ref;
+            const event_match = "pull_request";
+            console.log("PR Number: " + pr_number);
+            console.log("Workflow name: " + workflow_name);
+            console.log("Branch name: " + branch_name);
+
+            if (!pr_number) {
+              console.log("No pull request number found in context.");
+              core.setOutput("count", 0);
+              return;
+            }
+
+            const runs = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event: event_match,
+              branch: branch_name,
+              per_page: 100
+            });
+
+            const filtered = runs.data.workflow_runs.filter(run =>
+              run.name === workflow_name &&
+              run.event === event_match &&
+              run.pull_requests?.some(p => p.number === pr_number)
+            );
+            console.log("Matches for filters aka runs: " + filtered.length);
+
+            const count = filtered.length > 0 ? filtered.length : 1;
+            core.setOutput("rc_number", count);
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -86,13 +128,17 @@ jobs:
           skip_existing: true
           verbose: true
           print_hash: true
-      - name: Create Prerelease
-        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
-        uses: softprops/action-gh-release@v2
+      - name: 'Create changelog based prerelease'
+        # if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
+        uses: brainelectronics/changelog-based-release@v1.2.2
         with:
-          tag_name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
-          name: ${{ env.latest_version }}-rc${{ github.run_number }}.dev${{ github.event.number }}
-          body: ${{ steps.update_changelog.outputs.LATEST_DESCRIPTION }}
-          draft: false
+          # note you'll typically need to create a personal access token
+          # with permissions to create releases in the other repo
+          # or you set the "contents" permissions to "write" as in this example
+          changelog-path: changelog.md
+          tag-name-prefix: ''
+          tag-name-extension: '-rc${{ steps.count.outputs.rc_number }}.dev${{ github.event.number }}'
+          release-name-prefix: ''
+          release-name-extension: '-rc${{ steps.count.outputs.rc_number }}.dev${{ github.event.number }}'
+          draft-release: true
           prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
