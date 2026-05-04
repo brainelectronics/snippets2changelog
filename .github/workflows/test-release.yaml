@@ -129,7 +129,7 @@ jobs:
           verbose: true
           print_hash: true
       - name: 'Create changelog based prerelease'
-        # if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
+        if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: brainelectronics/changelog-based-release@v1.2.3
         with:
           # note you'll typically need to create a personal access token
