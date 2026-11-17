@@ -122,11 +122,11 @@ jobs:
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          skip_existing: true
+          skip-existing: true
           verbose: true
-          print_hash: true
+          print-hash: true
       - name: 'Create changelog based prerelease'
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: brainelectronics/changelog-based-release@v1.2.3

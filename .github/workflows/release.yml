@@ -75,9 +75,9 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
-          skip_existing: true
+          skip-existing: true
           verbose: true
-          print_hash: true
+          print-hash: true
       - name: Create Release
         if: ${{ !contains(fromJson(env.CHANGELOG_JSON).meta.scope, 'internal') }}
         uses: softprops/action-gh-release@v2
