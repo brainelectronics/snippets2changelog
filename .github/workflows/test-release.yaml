@@ -67,8 +67,7 @@ jobs:
           python-version: '3.10'
       - name: Install deploy dependencies
         run: |
-          # Python 3.9 compability is dropped with Poetry 2.3.0
-          python -m pip install -U "poetry>2.2.0,<2.3.0" "twine>=6.2.0,<7"
+          python -m pip install -U "poetry>=2.5.1,<3" "twine>=7.0.0,<8"
           poetry install
       - name: Parse changelog
         id: parse_changelog
